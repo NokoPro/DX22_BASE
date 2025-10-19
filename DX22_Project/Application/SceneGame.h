@@ -1,20 +1,24 @@
-#ifndef __SCENE_GAME_H__
-#define __SCENE_GAME_H__
-
+#pragma once
 #include "../System/Scene.h"
-#include "../System/Model.h"
-#include "../System/Geometory.h"
-#include "../System/DirectX/ShaderList.h"
 #include "../System/Input.h"
+#include "../System/DirectX/ShaderList.h"
+#include "../System/Geometory.h"
+#include "../System/Model.h"
+
+#include "../Game/ECS.h"
+#include "../Game/World.h"
+#include "../Game/Components/TransformComponent.h"
+#include "../Game/Components/ModelRendererComponent.h"
+#include "../Game/Systems/SystemRegistry.h"
+#include "../Game/Systems/Update/OrbitCameraSystem.h"
+#include "../Game/Systems/Update/SpinSystem.h"
+#include "../Game/Systems/Render/ModelRenderSystem.h"
+#include "../Game/Systems/Render/DebugGridRenderSystem.h"
 #include <DirectXMath.h>
 
 /**
- * @brief ゲーム本編シーン（まずはモデル1体をテクスチャ付きで描画）
- * @details
- * - 起動時に FBX/OBJ を読み込み（Assimp）
- * - ShaderList の既定シェーダ（Lambert）を割り当て
- * - 毎フレーム、カメラを回転させてモデルを描画
- * - デバッグ用にグリッドを表示（F1でトグル）
+ * @file SceneGame.h
+ * @brief ゲーム本編シーン（ECS：Model を Transform+ModelRenderer で描画）
  */
 class SceneGame : public Scene
 {
@@ -22,37 +26,27 @@ public:
     SceneGame();
     ~SceneGame();
 
-    /** @brief 更新処理（カメラ操作など） */
+    /** @brief フレーム更新（入力・カメラ・ロジック） */
     void Update() final;
 
-    /** @brief 描画処理（モデル＋デバッググリッド） */
+    /** @brief フレーム描画（モデル・デバッグ） */
     void Draw() final;
 
 private:
-    /// モデル本体
-    Model m_model;
+    // === ECS中枢 ===
+    World           m_world;
+    SystemRegistry  m_sys;
 
-    /// 行列（world, view, proj）
-    DirectX::XMFLOAT4X4 m_wvp[3];
+    // === カメラ（Update System） ===
+    OrbitCameraSystem* m_cam = nullptr;
 
-    /// カメラ角度（水平オービット用）
-    float m_camAngle = 0.0f;
+    // === 描画（Render System参照） ===
+    ModelRenderSystem* m_drawModel = nullptr;
+    bool                m_showGrid = true;
 
-    /// デバッググリッド表示
-    bool m_showGrid = true;
+    // === 資産 ===
+    Model m_mushroom;
 
-    /// 読み込み成功フラグ
-    bool m_loaded = false;
-
-private:
-    /** @brief View/Projection の更新 */
-    void UpdateCamera(float dt);
-
-    /** @brief World/View/Proj を ShaderList に反映 */
-    void ApplyWVP();
-
-    /** @brief デフォルトライティングを設定 */
-    void ApplyLighting();
+    // === 入力用トグル ===
+    bool m_pauseSpin = false;
 };
-
-#endif // __SCENE_GAME_H__

@@ -34,6 +34,36 @@
     <Filter Include="ソース ファイル\System\DirectX">
       <UniqueIdentifier>{36a071c1-5faa-4aab-876a-ec9bef09e703}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Game">
+      <UniqueIdentifier>{1f6137c7-7548-420a-b26a-34ecb9d2bc2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Components">
+      <UniqueIdentifier>{9b7b323e-417c-448a-a651-62c1e1d084c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Systems">
+      <UniqueIdentifier>{620c1795-0e7c-4bb5-b731-ea9e39640fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game">
+      <UniqueIdentifier>{124dce4d-ba3e-4685-8a14-d9925d141552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Systems">
+      <UniqueIdentifier>{4fd974d5-cb6d-42c7-a9f3-a5e7738d7770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Components">
+      <UniqueIdentifier>{9d41d332-2398-46e0-bc1c-4acfb0e9d1ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Systems\Update">
+      <UniqueIdentifier>{d172b014-f753-4d10-ad49-3b0a4035d94a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Systems\Render">
+      <UniqueIdentifier>{4abeaa16-058b-44cd-aae1-a6e781bc83c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Systems\Update">
+      <UniqueIdentifier>{d94c73d6-4f35-41c7-8ec3-88362eafcb56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Systems\Render">
+      <UniqueIdentifier>{861035ea-6114-4605-95da-7850ca7c4e03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Main.cpp">
@@ -78,6 +108,21 @@
     <ClCompile Include="Work\_model.cpp">
       <Filter>ソース ファイル\Work</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Systems\SystemRegistry.cpp">
+      <Filter>ソース ファイル\Game\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\OrbitCameraSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\SpinSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Render\DebugGridRenderSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Render\ModelRenderSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\SceneGame.h">
@@ -118,6 +163,48 @@
     </ClInclude>
     <ClInclude Include="System\Sprite.h">
       <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ECS.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Tags.h">
+      <Filter>ヘッダー ファイル\Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\ModelRendererComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\TransformComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\World.h">
+      <Filter>ヘッダー ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\IUpdateSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\IRenderSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\SystemRegistry.h">
+      <Filter>ヘッダー ファイル\Game\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\OrbitCameraSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\SpinSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Render\ModelRenderSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Render\DebugGridRenderSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\SceneManager.h">
+      <Filter>ヘッダー ファイル\Application</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

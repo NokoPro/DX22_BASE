@@ -145,6 +145,11 @@
   <ItemGroup>
     <ClCompile Include="Application\Main.cpp" />
     <ClCompile Include="Application\SceneGame.cpp" />
+    <ClCompile Include="Game\Systems\Render\DebugGridRenderSystem.cpp" />
+    <ClCompile Include="Game\Systems\Render\ModelRenderSystem.cpp" />
+    <ClCompile Include="Game\Systems\SystemRegistry.cpp" />
+    <ClCompile Include="Game\Systems\Update\OrbitCameraSystem.cpp" />
+    <ClCompile Include="Game\Systems\Update\SpinSystem.cpp" />
     <ClCompile Include="System\DirectX\DirectX.cpp" />
     <ClCompile Include="System\DirectX\MeshBuffer.cpp" />
     <ClCompile Include="System\DirectX\Shader.cpp" />
@@ -161,6 +166,20 @@
   <ItemGroup>
     <ClInclude Include="Application\Main.h" />
     <ClInclude Include="Application\SceneGame.h" />
+    <ClInclude Include="Application\SceneManager.h" />
+    <ClInclude Include="Game\Components.h" />
+    <ClInclude Include="Game\Components\ModelRendererComponent.h" />
+    <ClInclude Include="Game\Components\Tags.h" />
+    <ClInclude Include="Game\Components\TransformComponent.h" />
+    <ClInclude Include="Game\ECS.h" />
+    <ClInclude Include="Game\Systems\IRenderSystem.h" />
+    <ClInclude Include="Game\Systems\IUpdateSystem.h" />
+    <ClInclude Include="Game\Systems\Render\DebugGridRenderSystem.h" />
+    <ClInclude Include="Game\Systems\Render\ModelRenderSystem.h" />
+    <ClInclude Include="Game\Systems\SystemRegistry.h" />
+    <ClInclude Include="Game\Systems\Update\OrbitCameraSystem.h" />
+    <ClInclude Include="Game\Systems\Update\SpinSystem.h" />
+    <ClInclude Include="Game\World.h" />
     <ClInclude Include="System\Defines.h" />
     <ClInclude Include="System\DirectX\DirectX.h" />
     <ClInclude Include="System\DirectX\MeshBuffer.h" />
