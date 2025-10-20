@@ -14,6 +14,15 @@
 #include "../Game/Systems/Update/SpinSystem.h"
 #include "../Game/Systems/Render/ModelRenderSystem.h"
 #include "../Game/Systems/Render/DebugGridRenderSystem.h"
+#include "../Game/Systems/Render/AabbDebugRenderSystem.h"
+
+#include "../Game/Systems/Update/PlayerInputSystem.h"
+#include "../Game/Systems/Update/MovementControlSystem.h"
+#include "../Game/Systems/Update/PhysicsSystem.h"
+#include "../Game/Systems/Update/CollisionSystem.h"
+
+#include "../Game/Prefabs/PrefabRegistry.h"
+
 #include <DirectXMath.h>
 
 /**
@@ -43,10 +52,13 @@ private:
     // === 描画（Render System参照） ===
     ModelRenderSystem* m_drawModel = nullptr;
     bool                m_showGrid = true;
+    bool                m_showColliders = false; // F2でON/OFF
 
     // === 資産 ===
     Model m_mushroom;
 
     // === 入力用トグル ===
     bool m_pauseSpin = false;
+
+    PrefabRegistry m_prefabs;
 };

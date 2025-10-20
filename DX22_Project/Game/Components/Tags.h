@@ -1,6 +1,8 @@
 #pragma once
 
-/// エンプティTagの例：識別/フィルタ用（データなし）
+/**
+ * @file Tags.h
+ * @brief 軽量な識別タグ群。データなし（型で識別）
+ */
 struct PlayerTag {};
-struct EnemyTag {};
-struct StaticTag {};
+struct StaticLevelTag {};

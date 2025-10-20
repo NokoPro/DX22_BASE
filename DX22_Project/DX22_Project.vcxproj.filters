@@ -64,6 +64,21 @@
     <Filter Include="ヘッダー ファイル\Game\Systems\Render">
       <UniqueIdentifier>{861035ea-6114-4605-95da-7850ca7c4e03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Components\Gameplay">
+      <UniqueIdentifier>{0f83490f-5424-4ac1-88d5-48d5fbd0c326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Components\Physics">
+      <UniqueIdentifier>{ea89f1b7-6866-4862-b9e2-b3eae73e8078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Systems\Physics">
+      <UniqueIdentifier>{f2c69a92-0098-4b9e-8688-9e5a088ce11a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Components\Prefabs">
+      <UniqueIdentifier>{2a6686bc-b165-4e1a-a596-5421a86ce2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Prefabs">
+      <UniqueIdentifier>{ff7d869a-cf82-4b3a-a044-4febf640cd1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Main.cpp">
@@ -121,6 +136,24 @@
       <Filter>ソース ファイル\Game\Systems\Render</Filter>
     </ClCompile>
     <ClCompile Include="Game\Systems\Render\ModelRenderSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\MovementControlSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\CollisionSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\PhysicsSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Prefabs\PrefabRegistry.cpp">
+      <Filter>ソース ファイル\Game\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\PlayerInputSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Render\AabbDebugRenderSystem.cpp">
       <Filter>ソース ファイル\Game\Systems\Render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -205,6 +238,54 @@
     </ClInclude>
     <ClInclude Include="Application\SceneManager.h">
       <Filter>ヘッダー ファイル\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Gameplay\CharacterControllerComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Physics\RigidbodyComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Physics\AabbColliderComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Physics\GroundingComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Physics\MotionDeltaComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\MovementControlSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\PhysicsSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\CollisionSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Physics\AabbUtil.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Prefabs\PrefabRegistry.h">
+      <Filter>ヘッダー ファイル\Game\Components\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Prefabs\PlayerPrefab.h">
+      <Filter>ヘッダー ファイル\Game\Components\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Prefabs\StaticBoxPrefab.h">
+      <Filter>ヘッダー ファイル\Game\Components\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\PlayerInputSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Render\AabbDebugRenderSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\NameComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\CollisionLayer.h">
+      <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
