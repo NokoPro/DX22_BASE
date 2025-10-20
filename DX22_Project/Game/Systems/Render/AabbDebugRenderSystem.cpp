@@ -18,12 +18,9 @@ static inline void DrawBoxWorld(const XMFLOAT3& center, const XMFLOAT3& half)
     Geometory::SetWorld(Wt);
 
     // --- ここで半透明の薄い緑にしたい ---
-    // Geometory に色設定APIがあるなら、どれかを有効化（プロジェクトの実装に合わせて選択）
-    // 例1: Geometory::SetColor({0.6f, 1.0f, 0.6f, 0.25f}); // (R,G,B,A)
-    // 例2: Geometory::SetBoxColor({0.6f, 1.0f, 0.6f, 0.25f});
-    // ※色APIが無い場合は塗りは既定色になります（輪郭は後段で緑に）
-
-    Geometory::DrawBox(); // 実箱（面）を描画
+    const DirectX::XMFLOAT4 fill = { 0.6f, 1.0f, 0.6f, 0.25f };
+    Geometory::SetColor(fill);
+    Geometory::DrawBox(); // ← 既存呼び出し
 }
 
 static inline void AddAabbWire(
@@ -55,8 +52,8 @@ void AabbDebugRenderSystem::Render(const World& world)
     // 表示OFFなら描かない
     if (m_enabled && !*m_enabled) return;
 
-    // 線の色：薄い緑（輪郭は不透明で見やすく）
-    const XMFLOAT4 wireCol{ 0.6f, 1.0f, 0.6f, 1.0f };
+    // 線の色：薄い青（輪郭は不透明で見やすく）
+    const XMFLOAT4 wireCol{ 0.6f, 0.6f, 1.0f, 1.0f };
 
     // 全AABBを走査して「半透明の箱＋緑ライン」を描画
     world.View<TransformComponent, AabbColliderComponent>(

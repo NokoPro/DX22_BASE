@@ -28,6 +28,7 @@ public:
 	static void SetWorld(DirectX::XMFLOAT4X4 world);
 	static void SetView(DirectX::XMFLOAT4X4 view);
 	static void SetProjection(DirectX::XMFLOAT4X4 proj);
+	static void SetColor(DirectX::XMFLOAT4 rgba);
 
 	static void AddLine(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end,
 		DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -59,6 +60,7 @@ private:
 	static Shader* m_pPS;
 	static Shader* m_pLineShader[2];
 	static DirectX::XMFLOAT4X4 m_WVP[3];
+	static DirectX::XMFLOAT4 m_Color;
 	static void* m_pLineVtx;
 	static int m_lineCnt;
 };

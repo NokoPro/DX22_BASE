@@ -52,8 +52,8 @@ SceneGame::SceneGame()
     {
         Prefabs::PlayerConfig pcfg;
         pcfg.model = &m_mushroom;    // 既にロード済みのモデル
-        pcfg.colliderHalf = { 0.2f, 0.3f, 0.2f };
-        pcfg.colliderOffset = { 0.f, 0.3f, 0.f };
+        pcfg.colliderHalf = { 0.4f, 0.7f, 0.4f };
+        pcfg.colliderOffset = { 0.f, 0.7f, 0.f };
         pcfg.inverseMass = 1.0f;
         pcfg.linearDamping = 0.05f;
         pcfg.gravityEnabled = true;
@@ -68,13 +68,13 @@ SceneGame::SceneGame()
     // --- スポーン ---
     // 床：中心(0,-0.25,0)、ハーフ(5,0.25,5)
     m_prefabs.Spawn("StaticBox", m_world,
-        { DirectX::XMFLOAT3{0.f, -0.25f, 0.f},
+        { DirectX::XMFLOAT3{0.f, 0.5f, 0.f},
           DirectX::XMFLOAT3{0.f, 0.f, 0.f},
           DirectX::XMFLOAT3{5.f, 0.25f, 5.f} });
 
     // プレイヤー：位置(0,0.5,0)、スケールは見た目用
     m_prefabs.Spawn("Player", m_world,
-        { DirectX::XMFLOAT3{0.f, 0.5f, 0.f},
+        { DirectX::XMFLOAT3{0.f, 0.75f, 0.f},
           DirectX::XMFLOAT3{0.f, 0.f, 0.f},
           DirectX::XMFLOAT3{0.06f, 0.06f, 0.06f} });
 
