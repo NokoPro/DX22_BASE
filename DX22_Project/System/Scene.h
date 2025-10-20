@@ -4,9 +4,6 @@
 class Scene
 {
 public:
-	void RootUpdate();
-	void RootDraw();
-
 	Scene();
 	virtual ~Scene();
 	virtual void Update() = 0;

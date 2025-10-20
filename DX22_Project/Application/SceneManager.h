@@ -24,13 +24,14 @@ public:
     }
 
     /** @brief 現在のシーンを更新 */
-    void Update() {
-        if (m_current) m_current->RootUpdate();
+    void Update()
+    {
+        if (m_current) m_current->Update();
     }
 
     /** @brief 現在のシーンを描画 */
     void Draw() {
-        if (m_current) m_current->RootDraw();
+        if (m_current) m_current->Draw();
     }
 
     /** @brief 現在のシーン取得（必要ならキャストして使う） */
