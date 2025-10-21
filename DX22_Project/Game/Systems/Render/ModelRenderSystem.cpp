@@ -10,8 +10,6 @@ using namespace DirectX;
 
 void ModelRenderSystem::Render(const World& world)
 {
-    using namespace DirectX;
-
     world.View<TransformComponent, ModelRendererComponent>(
         [&](EntityId, const TransformComponent& tr, const ModelRendererComponent& mr)
         {

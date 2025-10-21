@@ -6,7 +6,7 @@
  * およびView(システム処理用の走査)を担うクラスです。
  *
  * 依存関係：
- *   - ECS.h（EntityId, IComponentStorage, ComponentTypeの定義を含む）
+ * - ECS.h（EntityId, IComponentStorage, ComponentTypeの定義を含む）
  */
 #pragma once
 #include "ECS.h"
@@ -114,7 +114,8 @@ public:
      * @note 存在しない場合はassertで停止します。
      */
     template<class T>
-    T& Get(EntityId e) {
+    T& Get(EntityId e)
+    {
         auto* s = find<T>();
         assert(s && "Get<T>: storage not found");
         auto it = s->find(e);
@@ -129,7 +130,8 @@ public:
      * @return const参照
      */
     template<class T>
-    const T& Get(EntityId e) const {
+    const T& Get(EntityId e) const
+    {
         const auto* s = find<T>();
         assert(s && "Get<T> const: storage not found");
         auto it = s->find(e);
@@ -138,15 +140,49 @@ public:
     }
 
     /**
+     * @brief コンポーネントを取得（TryGet版、非const）
+     * @tparam T コンポーネント型
+     * @param e エンティティID
+     * @return Tへのポインタ（存在しない場合はnullptr）
+     */
+    template<class T>
+    T* TryGet(EntityId e)
+    {
+        auto* s = find<T>();
+        if (!s) return nullptr;
+        auto it = s->find(e);
+        if (it == s->end()) return nullptr;
+        return &it->second;
+    }
+
+    /**
+     * @brief コンポーネントを取得（TryGet版、const）
+     * @tparam T コンポーネント型
+     * @param e エンティティID
+     * @return Tへのconstポインタ（存在しない場合はnullptr）
+     */
+    template<class T>
+    const T* TryGet(EntityId e) const
+    {
+        const auto* s = find<T>();
+        if (!s) return nullptr;
+        auto it = s->find(e);
+        if (it == s->end()) return nullptr;
+        return &it->second;
+    }
+
+    /**
      * @brief コンポーネントを削除
      * @tparam T コンポーネント型
      * @param e 対象エンティティID
      */
     template<class T>
-    void Remove(EntityId e) {
+    void Remove(EntityId e)
+    {
         auto* s = find<T>();
         if (s) s->erase(e);
     }
+
 
     //--------------------------------------------------------------------------
     // View処理（ラムダで複数コンポーネントを走査）
@@ -161,12 +197,16 @@ public:
      * 指定した全てのコンポーネントを持つエンティティを走査し、関数を呼び出します。
      */
     template<class A, class... Rest, class Fn>
-    void View(Fn&& fn) {
+    void View(Fn&& fn)
+    {
         auto* sa = find<A>();
         if (!sa) return;
-        for (auto& kv : *sa) {
+        for (auto& kv : *sa)
+        {
             const EntityId e = kv.first;
-            if (has_all_rest<Rest...>(e)) {
+            if (has_all_rest<Rest...>(e))
+            {
+                // NOTE: has_all_restが成功すればGetは安全に実行できると見なす
                 fn(e, Get<A>(e), Get<Rest>(e)...);
             }
         }
@@ -179,12 +219,16 @@ public:
      * @param fn 呼び出すラムダ（例: [](EntityId, const A&, const Rest&...){}）
      */
     template<class A, class... Rest, class Fn>
-    void View(Fn&& fn) const {
+    void View(Fn&& fn) const
+    {
         auto const* sa = find<A>();
         if (!sa) return;
-        for (auto const& kv : *sa) {
+        for (auto const& kv : *sa)
+        {
             const EntityId e = kv.first;
-            if (has_all_rest<Rest...>(e)) {
+            if (has_all_rest<Rest...>(e))
+            {
+                // NOTE: has_all_restが成功すればGetは安全に実行できると見なす
                 fn(e, Get<const A>(e), Get<const Rest>(e)...);
             }
         }
@@ -220,6 +264,7 @@ private:
         ComponentType key = std::type_index(typeid(T));
         auto it = m_storages.find(key);
         if (it == m_storages.end()) return nullptr;
+        // Why: unique_ptr.get() の結果を static_cast で ComponentStorage<T>* にダウンキャストし、そのデータマップへのポインタを返す。
         return &static_cast<ComponentStorage<T>*>(it->second.get())->data;
     }
 
@@ -233,11 +278,14 @@ private:
         ComponentType key = std::type_index(typeid(T));
         auto it = m_storages.find(key);
         if (it == m_storages.end()) return nullptr;
+        // Why: const版でも同様に安全にダウンキャストし、constなデータマップへのポインタを返す。
         return &static_cast<const ComponentStorage<T>*>(it->second.get())->data;
     }
 
     /**
      * @brief 可変長パックの "空" ケースを受ける末端版
+     * @tparam Ts 0個のコンポーネント型群
+     * @param エンティティID（未使用）
      * @return 常にtrue
      */
     template<class... Ts>

@@ -10,7 +10,7 @@
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Components/ModelRendererComponent.h"
 #include "../Game/Systems/SystemRegistry.h"
-#include "../Game/Systems/Update/OrbitCameraSystem.h"
+#include "../Game/Systems/Update/FollowCameraSystem.h"
 #include "../Game/Systems/Update/SpinSystem.h"
 #include "../Game/Systems/Render/ModelRenderSystem.h"
 #include "../Game/Systems/Render/DebugGridRenderSystem.h"
@@ -47,7 +47,7 @@ private:
     SystemRegistry  m_sys;
 
     // === カメラ（Update System） ===
-    OrbitCameraSystem* m_cam = nullptr;
+    FollowCameraSystem* m_cam = nullptr;
 
     // === 描画（Render System参照） ===
     ModelRenderSystem* m_drawModel = nullptr;
@@ -56,6 +56,10 @@ private:
 
     // === 資産 ===
     Model m_mushroom;
+    Model m_ground;
+
+    // === ECS エンティティID保持 ===
+    EntityId m_playerEntity = 0; // <- プレイヤーエンティティIDを保持するために追加
 
     // === 入力用トグル ===
     bool m_pauseSpin = false;

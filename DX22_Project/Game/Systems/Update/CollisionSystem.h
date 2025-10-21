@@ -27,7 +27,8 @@ private:
     int   m_maxIterations; ///< 1フレーム内の最大反復数
     float m_groundNormalY; ///< これ以上なら「上面」とみなして接地扱い
 
-    struct StaticAabbCache {
+    struct StaticAabbCache 
+    {
         Aabb aabb;
     };
 

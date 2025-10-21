@@ -79,6 +79,9 @@
     <Filter Include="ソース ファイル\Game\Prefabs">
       <UniqueIdentifier>{ff7d869a-cf82-4b3a-a044-4febf640cd1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Game\Components\Camera">
+      <UniqueIdentifier>{ccdd6a55-5602-4e25-b963-4e76025392f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Main.cpp">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="Game\Systems\Render\AabbDebugRenderSystem.cpp">
       <Filter>ソース ファイル\Game\Systems\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Systems\Update\FollowCameraSystem.cpp">
+      <Filter>ソース ファイル\Game\Systems\Update</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +292,15 @@
     </ClInclude>
     <ClInclude Include="Game\Components\CollisionLayer.h">
       <Filter>ヘッダー ファイル\Game\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Camera\CameraRigComponent.h">
+      <Filter>ヘッダー ファイル\Game\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Components\Camera\ActiveCameraTag.h">
+      <Filter>ヘッダー ファイル\Game\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Systems\Update\FollowCameraSystem.h">
+      <Filter>ヘッダー ファイル\Game\Systems\Update</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

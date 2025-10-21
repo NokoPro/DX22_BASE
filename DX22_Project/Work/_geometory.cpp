@@ -2,7 +2,8 @@
 #include <vector>
 #include <cmath>
 
-static inline Geometory::Vertex MakeV(float x, float y, float z, float u, float v) {
+static inline Geometory::Vertex MakeV(float x, float y, float z, float u, float v)
+{
     Geometory::Vertex out{};
     out.pos[0] = x; out.pos[1] = y; out.pos[2] = z;
     out.uv[0] = u; out.uv[1] = v;
