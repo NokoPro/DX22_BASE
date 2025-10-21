@@ -94,7 +94,7 @@ SceneGame::SceneGame()
     // プレイヤー：位置(0,0.5,0)、スケールは見た目用
     const EntityId playerEntity = m_prefabs.Spawn("Player", m_world,
         {
-            DirectX::XMFLOAT3{0.f, 0.75f, 0.f},
+            DirectX::XMFLOAT3{0.f, 3.f, 0.f},
             DirectX::XMFLOAT3{0.f, 180.f, 0.f},
             DirectX::XMFLOAT3{0.06f, 0.06f, 0.06f}
         });
