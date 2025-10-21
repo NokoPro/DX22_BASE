@@ -12,44 +12,88 @@ void PhysicsSystem::Update(World& world, float dt)
 {
     if (dt <= 0.f) return;
 
+    auto dot3 = [](const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b) {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+        };
+    auto add3 = [](DirectX::XMFLOAT3 a, const DirectX::XMFLOAT3& b) {
+        a.x += b.x; a.y += b.y; a.z += b.z; return a;
+        };
+    auto sub3 = [](DirectX::XMFLOAT3 a, const DirectX::XMFLOAT3& b) {
+        a.x -= b.x; a.y -= b.y; a.z -= b.z; return a;
+        };
+    auto scale3 = [](const DirectX::XMFLOAT3& v, float s) {
+        return DirectX::XMFLOAT3{ v.x * s, v.y * s, v.z * s };
+        };
+    // C++14 互換 clamp 関数
+    auto clampf = [](float v, float lo, float hi) {
+        return (v < lo) ? lo : (v > hi ? hi : v);
+        };
+
+    // m_gravityY はスカラー（例：-9.8f）
     world.View<RigidbodyComponent, MotionDeltaComponent, GroundingComponent>(
         [&](EntityId, RigidbodyComponent& rb, MotionDeltaComponent& md, GroundingComponent& gr)
         {
             if (rb.inverseMass <= 0.f) {
-                // 静的：速度/力は無視、deltaはゼロに
-                md.delta = { 0.f, 0.f, 0.f };
+                md.delta = { 0,0,0 };
                 return;
             }
 
-            // --- 外力→加速度 ---
-            XMVECTOR acc = XMLoadFloat3(&rb.accumulatedForce);        // 現在フレームの外力
-            acc = XMVectorScale(acc, rb.inverseMass);                  // a = F * invMass
-
-            // --- 重力（物理の一部） ---
+            // 重力
+            DirectX::XMFLOAT3 g{ 0,0,0 };
             if (rb.gravityEnabled) {
-                acc = acc + XMVectorSet(0.f, m_gravityY * rb.gravityScale, 0.f, 0.f);
+                g = { 0.0f, m_gravityY * rb.gravityScale, 0.0f };
             }
 
-            // --- 速度更新（Semi-Implicit Euler）---
-            XMVECTOR v = XMLoadFloat3(&rb.velocity);
-            v = v + acc * dt;
+            // ★ 接地中は地面法線方向の重力をカット
+            if (gr.grounded) {
+                const DirectX::XMFLOAT3& n = gr.groundNormal;
+                const float gN = dot3(g, n);
+                if (gN < 0.0f) {
+                    g = sub3(g, scale3(n, gN));
+                }
+            }
 
-            // --- 速度減衰（空気抵抗的）---
-            // 連続時間の指数減衰に近い形：v *= exp(-damping * dt)
-            const float damp = std::max(0.f, rb.linearDamping);
-            const float k = (damp > 0.f) ? std::expf(-damp * dt) : 1.f;
-            v = v * k;
+            // 加速度 a = g + 外力/m
+            DirectX::XMFLOAT3 a = g;
+            a = add3(a, scale3(rb.accumulatedForce, rb.inverseMass));
 
-            XMStoreFloat3(&rb.velocity, v);
+            // ★ 接地中は地面へ押し付ける加速度をカット
+            if (gr.grounded) {
+                const DirectX::XMFLOAT3& n = gr.groundNormal;
+                const float aN = dot3(a, n);
+                if (aN < 0.0f) {
+                    a = sub3(a, scale3(n, aN));
+                }
+            }
 
-            // --- 今フレームの希望移動量 delta を書き出す ---
-            XMVECTOR d = v * dt;
-            XMStoreFloat3(&md.delta, d);
+            // 半陰的オイラー積分
+            rb.velocity.x += a.x * dt;
+            rb.velocity.y += a.y * dt;
+            rb.velocity.z += a.z * dt;
 
-            // --- 経過時間の更新（接地キャッシュ）---
-            gr.timeSinceGrounded += dt;
+            // ★ C++14用 clamp に変更
+            const float damp = clampf(1.0f - rb.linearDamping, 0.0f, 1.0f);
+            rb.velocity.x *= damp;
+            rb.velocity.y *= damp;
+            rb.velocity.z *= damp;
 
-            // --- 外力は使い切ったのでクリア ---
-            rb.accumulatedForce = { 0.f, 0.f, 0.f };
+            // 接地中は地面へ突き刺さらないように
+            if (gr.grounded) {
+                const DirectX::XMFLOAT3& n = gr.groundNormal;
+                const float vN = dot3(rb.velocity, n);
+                if (vN < 0.0f) {
+                    rb.velocity.x -= vN * n.x;
+                    rb.velocity.y -= vN * n.y;
+                    rb.velocity.z -= vN * n.z;
+                }
+            }
+
+            // MotionDelta に速度積分
+            md.delta.x += rb.velocity.x * dt;
+            md.delta.y += rb.velocity.y * dt;
+            md.delta.z += rb.velocity.z * dt;
+
+            // 外力リセット
+            rb.accumulatedForce = { 0,0,0 };
         });
 }

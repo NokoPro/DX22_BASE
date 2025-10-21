@@ -149,8 +149,10 @@
     <ClCompile Include="Game\Systems\Render\AabbDebugRenderSystem.cpp" />
     <ClCompile Include="Game\Systems\Render\DebugGridRenderSystem.cpp" />
     <ClCompile Include="Game\Systems\Render\ModelRenderSystem.cpp" />
+    <ClCompile Include="Game\Systems\Render\ObbDebugRenderSystem.cpp" />
     <ClCompile Include="Game\Systems\SystemRegistry.cpp" />
     <ClCompile Include="Game\Systems\Update\CollisionSystem.cpp" />
+    <ClCompile Include="Game\Systems\Update\CollisionSystemOBB.cpp" />
     <ClCompile Include="Game\Systems\Update\FollowCameraSystem.cpp" />
     <ClCompile Include="Game\Systems\Update\MovementControlSystem.cpp" />
     <ClCompile Include="Game\Systems\Update\OrbitCameraSystem.cpp" />
@@ -184,6 +186,7 @@
     <ClInclude Include="Game\Components\Physics\AabbColliderComponent.h" />
     <ClInclude Include="Game\Components\Physics\GroundingComponent.h" />
     <ClInclude Include="Game\Components\Physics\MotionDeltaComponent.h" />
+    <ClInclude Include="Game\Components\Physics\ObbColliderComponent.h" />
     <ClInclude Include="Game\Components\Physics\RigidbodyComponent.h" />
     <ClInclude Include="Game\Components\Tags.h" />
     <ClInclude Include="Game\Components\TransformComponent.h" />
@@ -194,11 +197,14 @@
     <ClInclude Include="Game\Systems\IRenderSystem.h" />
     <ClInclude Include="Game\Systems\IUpdateSystem.h" />
     <ClInclude Include="Game\Systems\Physics\AabbUtil.h" />
+    <ClInclude Include="Game\Systems\Physics\ObbUtil.h" />
     <ClInclude Include="Game\Systems\Render\AabbDebugRenderSystem.h" />
     <ClInclude Include="Game\Systems\Render\DebugGridRenderSystem.h" />
     <ClInclude Include="Game\Systems\Render\ModelRenderSystem.h" />
+    <ClInclude Include="Game\Systems\Render\ObbDebugRenderSystem.h" />
     <ClInclude Include="Game\Systems\SystemRegistry.h" />
     <ClInclude Include="Game\Systems\Update\CollisionSystem.h" />
+    <ClInclude Include="Game\Systems\Update\CollisionSystemOBB.h" />
     <ClInclude Include="Game\Systems\Update\FollowCameraSystem.h" />
     <ClInclude Include="Game\Systems\Update\MovementControlSystem.h" />
     <ClInclude Include="Game\Systems\Update\OrbitCameraSystem.h" />

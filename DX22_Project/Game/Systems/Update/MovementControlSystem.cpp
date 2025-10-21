@@ -22,42 +22,82 @@ void MovementControlSystem::Update(World& world, float dt)
 {
     if (dt <= 0.f) return;
 
+    auto dot3 = [](const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b) {
+        return a.x * b.x + a.y * b.y + a.z * b.z;
+        };
+    auto sub3 = [](DirectX::XMFLOAT3 a, const DirectX::XMFLOAT3& b) {
+        a.x -= b.x; a.y -= b.y; a.z -= b.z; return a;
+        };
+    auto scale3 = [](const DirectX::XMFLOAT3& v, float s) {
+        return DirectX::XMFLOAT3{ v.x * s, v.y * s, v.z * s };
+        };
+    auto len3 = [](const DirectX::XMFLOAT3& v) {
+        return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+        };
+
     world.View<CharacterControllerComponent, RigidbodyComponent, GroundingComponent>(
         [&](EntityId, CharacterControllerComponent& cc, RigidbodyComponent& rb, GroundingComponent& gr)
         {
             if (rb.inverseMass <= 0.f) return; // 静的は無視
             const float mass = 1.0f / rb.inverseMass;
 
-            // --- 目標水平速度（XZ） ---
-            // 入力ベクトルを正規化→歩行/走りの最大速度でスケール
-            XMVECTOR in = XMVectorSet(cc.moveInput.x, 0.f, cc.moveInput.y, 0.f);
-            const float lenSq = XMVectorGetX(XMVector3LengthSq(in));
-            if (lenSq > 1e-6f) in = XMVector3Normalize(in);
+            // --- 入力 → 目標水平速度（XZ） ---
+            DirectX::XMVECTOR in = DirectX::XMVectorSet(cc.moveInput.x, 0.f, cc.moveInput.y, 0.f);
+            const float lenSq = DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(in));
+            if (lenSq > 1e-6f) in = DirectX::XMVector3Normalize(in);
+
             const float maxSpeed = cc.runModifier ? m_runSpeed : m_walkSpeed;
-            XMVECTOR desiredV = XMVectorScale(in, maxSpeed);
+            DirectX::XMVECTOR desiredVxz = DirectX::XMVectorScale(in, maxSpeed);
 
             // 現在の水平速度
-            XMVECTOR vNow = XMVectorSet(rb.velocity.x, 0.f, rb.velocity.z, 0.f);
+            DirectX::XMVECTOR vNowxz = DirectX::XMVectorSet(rb.velocity.x, 0.f, rb.velocity.z, 0.f);
 
-            // 目標に近づくための Δv を dt で実現しようとする加速度
-            XMVECTOR dv = desiredV - vNow;
-            // a = Δv / dt、ただし大きすぎる場合は最大加速度でクランプ
-            XMVECTOR a = XMVectorScale(dv, 1.0f / dt);
-            const float aLen = XMVectorGetX(XMVector3Length(a));
+            // 目標に近づくための Δv → a = Δv/dt を最大加速度でクランプ
+            DirectX::XMVECTOR dv = desiredVxz - vNowxz;
+            DirectX::XMVECTOR a = DirectX::XMVectorScale(dv, 1.0f / dt);
+
+            float aLen = DirectX::XMVectorGetX(DirectX::XMVector3Length(a));
             if (aLen > m_maxAccelXZ) {
-                a = XMVectorScale(XMVector3Normalize(a), m_maxAccelXZ);
+                a = DirectX::XMVectorScale(DirectX::XMVector3Normalize(a), m_maxAccelXZ);
+                aLen = m_maxAccelXZ;
             }
 
-            // Force = mass * a を水平方向に加える
-            XMFLOAT3 a3; XMStoreFloat3(&a3, a);
-            rb.accumulatedForce = LoadFloat3Add(rb.accumulatedForce, ScaleFloat3(a3, mass));
+            // --- ★接触面の接線へ投影して「壁法線へ押し付けない」 ---
+            // 基本は水平制御だが、壁に当たっているときは法線成分を除去
+            if (gr.hasContact) {
+                DirectX::XMFLOAT3 n = gr.contactNormal;
+                // a(3D) を作る（y成分は 0 のままでOK）
+                DirectX::XMFLOAT3 a3;
+                DirectX::XMStoreFloat3(&a3, a);
+
+                // a_tangent = a - (a・n) n
+                const float aN = dot3(a3, n);
+                a3 = sub3(a3, scale3(n, aN));
+
+                // ほぼゼロの時は丸め（振動対策）
+                if (len3(a3) < 1e-4f) a3 = { 0,0,0 };
+
+                // 返す
+                a = DirectX::XMVectorSet(a3.x, 0.f, a3.z, 0.f);
+            }
+
+            // --- Force = mass * a を水平に加える ---
+            DirectX::XMFLOAT3 a3; DirectX::XMStoreFloat3(&a3, a);
+            rb.accumulatedForce.x += a3.x * mass;
+            rb.accumulatedForce.z += a3.z * mass;
 
             // --- ジャンプ（接地時のみ） ---
             if (cc.jumpPressed && gr.grounded) {
-                // 上向きに初速を与える（インパルス）
-                rb.velocity.y = m_jumpSpeed;
-                gr.grounded = false;         // 直後は空中
-                gr.timeSinceGrounded = 0.f;  // リセット
+                rb.velocity.y = m_jumpSpeed;     // インパルス
+                gr.grounded = false;
+                gr.timeSinceGrounded = 0.f;
+            }
+
+            // --- 微小入力のデッドゾーン（任意：端末ノイズ対策） ---
+            if (!cc.runModifier && lenSq < 1e-4f) {
+                // 入力がほぼゼロなら、ごく小さい水平速度を丸める
+                if (std::fabs(rb.velocity.x) < 1e-3f) rb.velocity.x = 0.f;
+                if (std::fabs(rb.velocity.z) < 1e-3f) rb.velocity.z = 0.f;
             }
         });
 }

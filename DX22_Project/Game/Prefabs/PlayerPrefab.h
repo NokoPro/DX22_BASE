@@ -11,6 +11,7 @@
 #include "../Components/Physics/AabbColliderComponent.h"
 #include "../Components/Physics/GroundingComponent.h"
 #include "../Components/Physics/MotionDeltaComponent.h"
+#include "../Components/Physics/ObbColliderComponent.h"
 
 class Model;
 
@@ -70,11 +71,12 @@ namespace Prefabs {
                 rb.gravityEnabled = cfg.gravityEnabled;
                 rb.gravityScale = cfg.gravityScale;
 
-                // AABB（動的）
-                auto& col = world.Add<AabbColliderComponent>(e);
+                // OBB（動的）
+                auto& col = world.Add<ObbColliderComponent>(e);
                 col.isStatic = false;
                 col.offset = cfg.colliderOffset;
                 col.halfExtents = cfg.colliderHalf;
+                col.rotationDeg = { 0.f, 0.f, 0.f };
 
                 // Grounding / MotionDelta
                 world.Add<GroundingComponent>(e);

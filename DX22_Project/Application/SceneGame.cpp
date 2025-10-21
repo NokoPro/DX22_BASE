@@ -15,6 +15,8 @@
 #include "../Game/Components/ModelRendererComponent.h"
 #include "../Game/Components/Camera/ActiveCameraTag.h"
 #include "../Game/Components/Camera/CameraRigComponent.h"
+#include "../Game/Systems/Render/ObbDebugRenderSystem.h"
+#include "../Game/Systems/Update/CollisionSystemOBB.h"
 
 using namespace DirectX;
 
@@ -65,6 +67,13 @@ SceneGame::SceneGame()
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
+            DirectX::XMFLOAT3{0.f, 1.0f, 10.f},
+            DirectX::XMFLOAT3{-45.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{5.f, 0.25f, 5.f}
+        });
+
+    m_prefabs.Spawn("StaticBox", m_world,
+        {
             DirectX::XMFLOAT3{10.f, 0.7f, 0.f},
             DirectX::XMFLOAT3{0.f, 0.f, 0.f},
             DirectX::XMFLOAT3{5.f, 1.f, 5.f}
@@ -105,16 +114,16 @@ SceneGame::SceneGame()
     m_cam = &m_sys.AddUpdate<FollowCameraSystem>();
 
     m_sys.AddUpdate<PlayerInputSystem>();                 // 入力 → 意図
-    m_sys.AddUpdate<MovementControlSystem>(3.0f, 5.0f, 25.0f, 5.0f); // 移動制御（力/ジャンプ）
+    m_sys.AddUpdate<MovementControlSystem>(3.0f, 5.0f, 25.0f, 7.0f); // 移動制御（力/ジャンプ）
     m_sys.AddUpdate<PhysicsSystem>(-9.8f);               // 重力/外力→速度→モーション量
-    m_sys.AddUpdate<CollisionSystem>(3, 0.6f);           // 衝突解決＆接地更新
+    m_sys.AddUpdate<CollisionSystemOBB>(3, 0.6f);           // 衝突解決＆接地更新
     
     // Render系
     m_drawModel = &m_sys.AddRender<ModelRenderSystem>();
     m_sys.AddRender<DebugGridRenderSystem>(&m_showGrid);
 
     // Render系
-    m_sys.AddRender<AabbDebugRenderSystem>(&m_showColliders);
+    m_sys.AddRender<ObbDebugRenderSystem>(&m_showColliders);
 
     // 共有ライティング設定（起動時1回）
     const float initialCamY = 2.75f;

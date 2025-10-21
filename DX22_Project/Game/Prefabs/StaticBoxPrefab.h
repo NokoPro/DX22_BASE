@@ -5,6 +5,7 @@
 
 #include "../Components/TransformComponent.h"
 #include "../Components/Physics/AabbColliderComponent.h"
+#include "../Components/Physics/ObbColliderComponent.h"
 #include "../Components/ModelRendererComponent.h"
 
 class Model;
@@ -41,8 +42,8 @@ namespace Prefabs {
                 mr.model = model;
                 mr.visible = true;
 
-                // 3. AabbColliderComponent (ê√ìIè’ìÀ)
-                auto& col = world.Add<AabbColliderComponent>(e);
+                // 3. ObbColliderComponent (ê√ìIè’ìÀ)
+                auto& col = world.Add<ObbColliderComponent>(e);
                 col.isStatic = true;
                 col.offset = { 0.f,0.f,p.scale.z };
                 col.halfExtents = p.scale;      // Åö AABBÇÃîºîºåaÇÕ SpawnParams.scale Ç…àÀë∂
