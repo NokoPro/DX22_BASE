@@ -5,6 +5,7 @@
 
 #include "../Components/TransformComponent.h"
 #include "../Components/Physics/AabbColliderComponent.h"
+#include "../Components/Physics/ObbColliderComponent.h"
 
 /**
  * @file StaticBoxPrefab.h
@@ -31,7 +32,7 @@ namespace Prefabs {
                 tr.rotationDeg = p.rotationDeg; // AABBÇÕé≤ïΩçsëOíÒÇ»ÇÃÇ≈í èÌÇÕ(0,0,0)
                 tr.scale = { 1.f,1.f,1.f }; // å©ÇΩñ⁄ópÇ≈ÇÕÇ»Ç¢ÇÃÇ≈1å≈íË
 
-                auto& col = world.Add<AabbColliderComponent>(e);
+                auto& col = world.Add<ObbColliderComponent>(e);
                 col.isStatic = true;
                 col.offset = { 0.f,0.f,0.f };
                 col.halfExtents = p.scale;      // Åö îºåaÅÅSpawnParams.scale
