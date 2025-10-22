@@ -12,6 +12,7 @@
 #include "../Components/Physics/GroundingComponent.h"
 #include "../Components/Physics/MotionDeltaComponent.h"
 #include "../Components/Physics/ObbColliderComponent.h"
+#include "../Components/Physics/JumpBufferComponent.h"
 
 class Model;
 
@@ -81,6 +82,7 @@ namespace Prefabs {
                 // Grounding / MotionDelta
                 world.Add<GroundingComponent>(e);
                 world.Add<MotionDeltaComponent>(e);
+                world.Add<JumpBufferComponent>(e);
 
                 return e;
             };

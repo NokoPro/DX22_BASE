@@ -17,6 +17,7 @@
 #include "../Game/Components/Camera/CameraRigComponent.h"
 #include "../Game/Systems/Render/ObbDebugRenderSystem.h"
 #include "../Game/Systems/Update/CollisionSystemOBB.h"
+#include "../Game/Systems/Update/JumpSystem.h"
 
 using namespace DirectX;
 
@@ -61,43 +62,50 @@ SceneGame::SceneGame()
     m_prefabs.Spawn("StaticBox", m_world,
         {
             DirectX::XMFLOAT3{0.f, 0.5f, 0.f},
-            DirectX::XMFLOAT3{0.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{5.f, 0.25f, 5.f}
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{5.f, 5.f, 0.25f}
         });
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
-            DirectX::XMFLOAT3{0.f, 1.0f, 10.f},
-            DirectX::XMFLOAT3{-45.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{5.f, 0.25f, 5.f}
+            DirectX::XMFLOAT3{0.f, 7.5f, 17.5f},
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{5.f, 5.f, 0.25f}
+        });
+
+    m_prefabs.Spawn("StaticBox", m_world,
+        {
+            DirectX::XMFLOAT3{0.f, 4.f, 9.f},
+            DirectX::XMFLOAT3{-135.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{5.f, 5.f, 0.25f}
         });
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
             DirectX::XMFLOAT3{10.f, 0.7f, 0.f},
-            DirectX::XMFLOAT3{0.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{5.f, 1.f, 5.f}
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{5.f, 5.f, 0.5f}
         });
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
             DirectX::XMFLOAT3{10.f, 2.f, 0.f},
-            DirectX::XMFLOAT3{0.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{1.f, 0.5f, 1.f}
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{1.f, 1.f, 0.25f}
         });
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
             DirectX::XMFLOAT3{10.f, 2.5f, 3.f},
-            DirectX::XMFLOAT3{0.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{1.f, 0.5f, 1.f}
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{1.f, 1.f, 0.25f}
         });
 
     m_prefabs.Spawn("StaticBox", m_world,
         {
             DirectX::XMFLOAT3{10.f, 3.f, 6.f},
-            DirectX::XMFLOAT3{0.f, 0.f, 0.f},
-            DirectX::XMFLOAT3{1.f, 0.5f, 1.f}
+            DirectX::XMFLOAT3{-90.f, 0.f, 0.f},
+            DirectX::XMFLOAT3{1.f, 1.f, 0.25f}
         });
 
     // プレイヤー：位置(0,0.5,0)、スケールは見た目用
@@ -117,7 +125,8 @@ SceneGame::SceneGame()
     m_sys.AddUpdate<MovementControlSystem>(3.0f, 5.0f, 25.0f, 7.0f); // 移動制御（力/ジャンプ）
     m_sys.AddUpdate<PhysicsSystem>(-9.8f);               // 重力/外力→速度→モーション量
     m_sys.AddUpdate<CollisionSystemOBB>(3, 0.6f);           // 衝突解決＆接地更新
-    
+    m_sys.AddUpdate<JumpSystem>(7.5f, 0.10f, 0.08f);
+
     // Render系
     m_drawModel = &m_sys.AddRender<ModelRenderSystem>();
     m_sys.AddRender<DebugGridRenderSystem>(&m_showGrid);
@@ -142,6 +151,15 @@ SceneGame::SceneGame()
 
     auto& rig = m_world.Add<CameraRigComponent>(camEntity);
     rig.target = m_playerEntity;
+    rig.lookAtOffset = { 0.f, 1.2f, 0.f };
+    rig.orbitEnabled = true;
+    rig.orbitDistance = 4.5f;
+    rig.orbitYawDeg = 180.f;
+    rig.orbitPitchDeg = 15.f;
+    rig.sensYaw = 0.15f;
+    rig.sensPitch = 0.12f;
+    rig.posStiffness = 28.f;
+    rig.posDamping = 10.f;
 }
 
 /**

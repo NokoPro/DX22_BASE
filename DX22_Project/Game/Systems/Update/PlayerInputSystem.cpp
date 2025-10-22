@@ -1,6 +1,7 @@
 #include "PlayerInputSystem.h"
 #include "../../World.h"
 #include "../../Components/Gameplay/CharacterControllerComponent.h"
+#include "../../Components/Physics/JumpBufferComponent.h"
 
 // フレームワークのキーボード入力
 #include "../../../System/Input.h"
@@ -144,4 +145,11 @@ void PlayerInputSystem::Update(World& world, float /*dt*/)
             cc.runModifier = runModifier;
             cc.jumpPressed = jumpPressed;
         });
+
+    if (jumpPressed) 
+    {
+        world.View<JumpBufferComponent>([&](EntityId, JumpBufferComponent& jb) {
+            jb.timeSincePressed = 0.0f;
+            });
+    }
 }

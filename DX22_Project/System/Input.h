@@ -14,4 +14,12 @@ bool IsKeyTrigger(BYTE key);
 bool IsKeyRelease(BYTE key);
 bool IsKeyRepeat(BYTE key);
 
+bool IsMouseDownR();
+POINT GetMouseDelta();
+
+// ホイールの増分を取得して 0 にリセット
+int  ConsumeMouseWheelDelta();
+
+// WndProc から呼ぶ用：ホイールの生Δを積む（120 単位）
+void Input_OnMouseWheel(short delta);
 #endif // __INPUT_H__

@@ -212,25 +212,32 @@ void CollisionSystemOBB::Update(World& world, float dt)
                 }
 
                 // --- (2) 地面スナップ：微小な浮き/沈みを吸着 ---
-                if (!hitGroundThisFrame && std::fabs(rb.velocity.y) < 0.2f)
+                if (!hitGroundThisFrame && rb.velocity.y <= 0.0f && std::fabs(rb.velocity.y) < 0.2f)
                 {
                     const WorldObb dyn = MakeWorldObb(tr, col);
                     DirectX::XMFLOAT3 down{ 0,-kSnapDist,0 };
                     float bestT = 1.0f; bool snapped = false; DirectX::XMFLOAT3 n{ 0,0,0 };
 
-                    for (int i = 0; i < (int)m_staticObbs.size(); ++i) {
+                    for (int i = 0; i < (int)m_staticObbs.size(); ++i) 
+                    {
                         const RayHit h = RaycastPointVsExpandedObb(m_staticObbs[i].obb, dyn, dyn.center, down, m_skin);
                         if (!h.hit) continue;
                         if (h.normal.y < kEnterGroundY) continue; // 上向き面のみ
                         if (h.t < bestT) { bestT = h.t; n = h.normal; snapped = true; }
                     }
-                    if (snapped) {
+                    if (snapped) 
+                    {
                         tr.position.y += down.y * bestT;
                         tr.position.x += n.x * m_skin;
                         tr.position.y += n.y * m_skin;
                         tr.position.z += n.z * m_skin;
+
+                        // ★ 「下向きスナップ」に限って接地扱いにする
                         hitGroundThisFrame = true;
                         lastHitN = n;
+
+                        // 下向き微小速度は丸める（上向きは触らない）
+                        if (rb.velocity.y < 0.0f) rb.velocity.y = 0.0f;
                     }
                 }
 

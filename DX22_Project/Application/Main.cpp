@@ -4,6 +4,9 @@
  * 
  * @author 浅野勇生
  * @date   2025/10/20 - 制作開始、ECSの組み込み
+ * @date   2025/10/21 - Player移動、カメラ追従、かんたんな物理挙動作成
+ * @date   2025/10/22 - OBBとRayを使った当たり判定の作成。斜めの床とか作って判定取れるようになった
+ * @date   2025/10/23 - カメラを回転できるようにした
  *********************************************************************/
 #include "Main.h"
 #include <memory>
@@ -148,17 +151,18 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
  * @brief ウィンドウプロシージャ
  * @details 必要に応じてキー入力やリサイズ等を追加。
  */
-static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (msg)
+    switch (message)
     {
+    case WM_MOUSEWHEEL:
+        Input_OnMouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
+        return 0; // ここで処理済みにしてOK
     case WM_DESTROY:
         PostQuitMessage(0);
-        return 0;
-    default:
         break;
     }
-    return DefWindowProc(hWnd, msg, wp, lp);
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 //-----------------------------------------------------------------------------

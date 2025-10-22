@@ -1,41 +1,51 @@
 #pragma once
 #include <DirectXMath.h>
-#include <cstdint>
+#include "../../ECS.h"
 
 /**
  * @file CameraRigComponent.h
- * @brief カメラの基本プロパティと追従/回転の制御用データ
+ * @brief カメラ挙動（追従／オービット）の調整パラメータを保持するコンポーネント
  * @details
- * - 本コンポーネントを持つ「カメラ用エンティティ」を1つ用意して使う。
- * - 追従先（target）を設定すると、FollowCameraSystem が Transform を更新。
- * - 軸ロックは位置/回転それぞれに対して個別に設定できる。
+ * - ターゲット（EntityId）を基準に、注視点（lookAtOffset）へカメラを向けます。
+ * - orbitEnabled=true のとき、ターゲットを支点に yaw/pitch で回転し、distance を保ちます。
+ * - posStiffness/posDamping は追従のバネ・ダンパ係数です（スムーズさの調整）。
  */
-    struct CameraRigComponent
+struct CameraRigComponent
 {
-    // ================= 光学系（投影） =================
-    float fovYDeg = 60.0f;     ///< 垂直FOV（度）
-    float aspect = 16.0f / 9.0f;///< 画面アスペクト
-    float zNear = 0.1f;      ///< 近クリップ
-    float zFar = 1000.0f;   ///< 遠クリップ
+    /** @name ターゲット/画角 */
+    ///@{
+    EntityId target = 0;                 ///< 追従/注視する対象エンティティ
+    float    fovYDeg = 60.f;             ///< 垂直視野角（度）
+    float    aspect = 16.f / 9.f;         ///< アスペクト比
+    float    zNear = 0.1f;             ///< 近クリップ
+    float    zFar = 100.f;            ///< 遠クリップ
+    ///@}
 
-    // ================= 追従ターゲット =================
-    /// @note 0 なら無効（EntityId が整数の想定）
-    unsigned int target = 0;     ///< 追従先エンティティID（Transform 必須）
+    /** @name 追従パラメータ */
+    ///@{
+    DirectX::XMFLOAT3 followOffset{ 0, 2.0f, -4.0f }; ///< 追従時の相対オフセット
+    DirectX::XMFLOAT3 lookAtOffset{ 0, 1.0f,  0.0f }; ///< 注視点オフセット（ターゲット座標系）
+    float posStiffness = 28.f;                       ///< 追従バネ係数（大きいほど素早く寄る）
+    float posDamping = 10.f;                       ///< 追従ダンパ係数（大きいほど減衰強）
+    struct { bool lockPosX = false, lockPosY = false, lockPosZ = false; } lock{}; ///< 軸ロック
+    ///@}
 
-    // ワールド座標でのオフセット（ターゲット基準）
-    DirectX::XMFLOAT3 followOffset{ 0.0f, 2.0f, -6.0f };
-    // ターゲットのどこを見るか（ターゲット位置 + ここ）
-    DirectX::XMFLOAT3 lookAtOffset{ 0.0f, 1.0f, 0.0f };
+    /** @name オービット（ターゲット支点回転） */
+    ///@{
+    bool  orbitEnabled = true;    ///< true でオービット有効
+    float orbitYawDeg = 180.f;  ///< 水平角（度）
+    float orbitPitchDeg = 15.f;   ///< 俯仰角（度）
+    float orbitMinPitch = -80.f;  ///< 俯仰角の下限
+    float orbitMaxPitch = 80.f;  ///< 俯仰角の上限
+    float orbitDistance = 4.0f;   ///< ターゲットからの距離
+    float orbitMinDist = 1.2f;   ///< 距離の下限
+    float orbitMaxDist = 12.0f;  ///< 距離の上限
+    ///@}
 
-    // ================= ばね-ダンパ係数（平滑化）=================
-    float posStiffness = 12.0f;  ///< 位置のばね係数（大きいほど素早く寄る）
-    float posDamping = 2.0f;   ///< 位置のダンピング（臨界近辺は ~2√k 目安）
-    float rotStiffness = 12.0f;  ///< 回転のばね係数
-    float rotDamping = 2.0f;   ///< 回転のダンピング
-
-    // ================= 軸ロック =================
-    struct AxisLock {
-        bool lockPosX = false, lockPosY = false, lockPosZ = false;
-        bool lockRotX = false, lockRotY = false, lockRotZ = false;
-    } lock;
+    /** @name 入力感度 */
+    ///@{
+    float sensYaw = 0.15f;  ///< Yaw 感度（deg / 入力1.0）
+    float sensPitch = 0.12f;  ///< Pitch 感度（deg / 入力1.0）
+    float sensZoom = 0.25f;  ///< ズーム感度（m / ステップ）
+    ///@}
 };

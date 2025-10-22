@@ -87,11 +87,11 @@ void MovementControlSystem::Update(World& world, float dt)
             rb.accumulatedForce.z += a3.z * mass;
 
             // --- ジャンプ（接地時のみ） ---
-            if (cc.jumpPressed && gr.grounded) {
-                rb.velocity.y = m_jumpSpeed;     // インパルス
-                gr.grounded = false;
-                gr.timeSinceGrounded = 0.f;
-            }
+            //if (cc.jumpPressed && gr.grounded) {
+            //    rb.velocity.y = m_jumpSpeed;     // インパルス
+            //    gr.grounded = false;
+            //    gr.timeSinceGrounded = 0.f;
+            //}
 
             // --- 微小入力のデッドゾーン（任意：端末ノイズ対策） ---
             if (!cc.runModifier && lenSq < 1e-4f) {
